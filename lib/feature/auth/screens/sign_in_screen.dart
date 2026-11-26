@@ -26,17 +26,22 @@ class SignInViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    String? countryDialCode = Get.find<AuthController>().getUserCountryCode().isNotEmpty ? Get.find<AuthController>().getUserCountryCode()
-        : CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).dialCode;
-    _phoneController.text =  Get.find<AuthController>().getUserNumber();
+    String? countryDialCode =
+        Get.find<AuthController>().getUserCountryCode().isNotEmpty
+            ? Get.find<AuthController>().getUserCountryCode()
+            : CountryCode.fromCountryCode(
+                    Get.find<SplashController>().configModel!.country!)
+                .dialCode;
+    _phoneController.text = Get.find<AuthController>().getUserNumber();
     _passwordController.text = Get.find<AuthController>().getUserPassword();
-    if(kDebugMode){
-      _phoneController.text ='7567002486';
-      _passwordController.text ='Zaika@987';
+    if (kDebugMode) {
+      _phoneController.text = '7567002486';
+      _passwordController.text = 'Zaika@987';
     }
+
     return Scaffold(
-      body: SafeArea(child: Center(
+      body: SafeArea(
+          child: Center(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
@@ -45,23 +50,28 @@ class SignInViewScreen extends StatelessWidget {
               width: 1170,
               child: GetBuilder<AuthController>(builder: (authController) {
                 return Column(children: [
-
                   Image.asset(Images.logo, width: 100),
                   // const SizedBox(height: Dimensions.paddingSizeSmall),
                   // Image.asset(Images.logoName, width: 100),
                   const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
-                  Text('sign_in'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 30)),
+                  Text('sign_in'.tr.toUpperCase(),
+                      style: robotoBlack.copyWith(fontSize: 30)),
                   const SizedBox(height: 50),
 
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radiusSmall),
                       color: Theme.of(context).cardColor,
-                      boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, spreadRadius: 1, blurRadius: 5)],
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey[Get.isDarkMode ? 800 : 200]!,
+                            spreadRadius: 1,
+                            blurRadius: 5)
+                      ],
                     ),
                     child: Column(children: [
-
                       CustomTextFieldWidget(
                         hintText: 'xxx-xxx-xxxxx'.tr,
                         showLabelText: false,
@@ -76,10 +86,16 @@ class SignInViewScreen extends StatelessWidget {
                         onCountryChanged: (CountryCode countryCode) {
                           countryDialCode = countryCode.dialCode;
                         },
-                        countryDialCode: countryDialCode != null ? CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).code
-                            : Get.find<LocalizationController>().locale.countryCode,
+                        countryDialCode: countryDialCode != null
+                            ? CountryCode.fromCountryCode(
+                                    Get.find<SplashController>()
+                                        .configModel!
+                                        .country!)
+                                .code
+                            : Get.find<LocalizationController>()
+                                .locale
+                                .countryCode,
                       ),
-
                       CustomTextFieldWidget(
                         showBorder: false,
                         hintText: 'password'.tr,
@@ -91,22 +107,24 @@ class SignInViewScreen extends StatelessWidget {
                         inputType: TextInputType.visiblePassword,
                         prefixIcon: Icons.lock,
                         isPassword: true,
-                        onSubmit: (text) => GetPlatform.isWeb ? _login(authController, _phoneController, _passwordController, countryDialCode!, context) : null,
+                        onSubmit: (text) => GetPlatform.isWeb
+                            ? _login(authController, _phoneController,
+                                _passwordController, countryDialCode!, context)
+                            : null,
                       ),
-
                     ]),
                   ),
                   const SizedBox(height: Dimensions.paddingSizeSmall),
 
                   Row(children: [
-
                     Expanded(
                       child: ListTile(
                         onTap: () => authController.toggleRememberMe(),
                         leading: Checkbox(
                           activeColor: Theme.of(context).primaryColor,
                           value: authController.isActiveRememberMe,
-                          onChanged: (bool? isChecked) => authController.toggleRememberMe(),
+                          onChanged: (bool? isChecked) =>
+                              authController.toggleRememberMe(),
                         ),
                         title: Text('remember_me'.tr),
                         contentPadding: EdgeInsets.zero,
@@ -114,37 +132,59 @@ class SignInViewScreen extends StatelessWidget {
                         horizontalTitleGap: 0,
                       ),
                     ),
-
                     TextButton(
-                      onPressed: () => Get.toNamed(RouteHelper.getForgotPassRoute()),
+                      onPressed: () =>
+                          Get.toNamed(RouteHelper.getForgotPassRoute()),
                       child: Text('${'forgot_password'.tr}?'),
                     ),
-
                   ]),
                   const SizedBox(height: 50),
 
-                  !authController.isLoading ? CustomButtonWidget(
-                    buttonText: 'sign_in'.tr,
-                    onPressed: () => _login(authController, _phoneController, _passwordController, countryDialCode!, context),
-                  ) : const Center(child: CircularProgressIndicator()),
-                  SizedBox(height: Get.find<SplashController>().configModel!.toggleDmRegistration! ? Dimensions.paddingSizeSmall : 0),
+                  !authController.isLoading
+                      ? CustomButtonWidget(
+                          buttonText: 'sign_in'.tr,
+                          onPressed: () => _login(
+                              authController,
+                              _phoneController,
+                              _passwordController,
+                              countryDialCode!,
+                              context),
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                  SizedBox(
+                      height: Get.find<SplashController>()
+                              .configModel!
+                              .toggleDmRegistration!
+                          ? Dimensions.paddingSizeSmall
+                          : 0),
 
-                  Get.find<SplashController>().configModel!.toggleDmRegistration! ? TextButton(
-                    style: TextButton.styleFrom(
-                      minimumSize: const Size(1, 40),
-                    ),
-                    onPressed: () async {
-                      Get.toNamed(RouteHelper.getDeliverymanRegistrationRoute());
-                    },
-                    child: RichText(text: TextSpan(children: [
-
-                      TextSpan(text: '${'join_as_a'.tr} ', style: robotoRegular.copyWith(color: Theme.of(context).disabledColor)),
-
-                      TextSpan(text: 'delivery_man'.tr, style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color)),
-
-                    ])),
-                  ) : const SizedBox(),
-
+                  Get.find<SplashController>()
+                          .configModel!
+                          .toggleDmRegistration!
+                      ? TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size(1, 40),
+                          ),
+                          onPressed: () async {
+                            Get.toNamed(
+                                RouteHelper.getDeliverymanRegistrationRoute());
+                          },
+                          child: RichText(
+                              text: TextSpan(children: [
+                            TextSpan(
+                                text: '${'join_as_a'.tr} ',
+                                style: robotoRegular.copyWith(
+                                    color: Theme.of(context).disabledColor)),
+                            TextSpan(
+                                text: 'delivery_man'.tr,
+                                style: robotoMedium.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color)),
+                          ])),
+                        )
+                      : const SizedBox(),
                 ]);
               }),
             ),
@@ -154,33 +194,42 @@ class SignInViewScreen extends StatelessWidget {
     );
   }
 
-  void _login(AuthController authController, TextEditingController phoneCtlr, TextEditingController passCtlr, String countryCode, BuildContext context) async {
+  void _login(
+      AuthController authController,
+      TextEditingController phoneCtlr,
+      TextEditingController passCtlr,
+      String countryCode,
+      BuildContext context) async {
     String phone = phoneCtlr.text.trim();
     String password = passCtlr.text.trim();
 
-    String numberWithCountryCode = countryCode+phone;
-    PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
+    String numberWithCountryCode = countryCode + phone;
+    PhoneValid phoneValid =
+        await CustomValidator.isPhoneValid(numberWithCountryCode);
     numberWithCountryCode = phoneValid.phone;
 
     if (phone.isEmpty) {
       showCustomSnackBar('enter_phone_number'.tr);
-    }else if (!phoneValid.isValid) {
+    } else if (!phoneValid.isValid) {
       showCustomSnackBar('invalid_phone_number'.tr);
-    }else if (password.isEmpty) {
+    } else if (password.isEmpty) {
       showCustomSnackBar('enter_password'.tr);
-    }else if (password.length < 6) {
+    } else if (password.length < 6) {
       showCustomSnackBar('password_should_be'.tr);
-    }else {
-      authController.login(numberWithCountryCode, password).then((status) async {
+    } else {
+      authController
+          .login(numberWithCountryCode, password)
+          .then((status) async {
         if (status.isSuccess) {
           if (authController.isActiveRememberMe) {
-            authController.saveUserNumberAndPassword(phone, password, countryCode);
+            authController.saveUserNumberAndPassword(
+                phone, password, countryCode);
           } else {
             authController.clearUserNumberAndPassword();
           }
           await Get.find<ProfileController>().getProfile();
           Get.offAllNamed(RouteHelper.getInitialRoute());
-        }else {
+        } else {
           showCustomSnackBar(status.message);
         }
       });

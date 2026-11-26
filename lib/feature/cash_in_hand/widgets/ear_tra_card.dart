@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../../helper/price_converter_helper.dart';
-import '../../../util/dimensions.dart';
-import '../../../util/styles.dart';
+import '../../../helper/export.dart';
 
 class EarningTransactionCard extends StatelessWidget {
   final double amount;

@@ -1,6 +1,5 @@
 import 'package:get/get_connect/http/src/response/response.dart';
 
-import '../../../../common/models/config_model.dart';
 import '../../../../helper/export.dart';
 
 class SplashRepository implements SplashRepositoryInterface {
